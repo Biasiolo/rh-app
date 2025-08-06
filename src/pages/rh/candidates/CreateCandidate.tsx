@@ -6,8 +6,8 @@ const CreateCandidate = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [experience, setExperience] = useState("");
-  const [password, setPassword] = useState(""); // Senha para criar o usuário
+
+  const [password, setPassword] = useState(""); //  para criar o usuário
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -25,9 +25,15 @@ const CreateCandidate = () => {
     try {
       // Cria a autenticação no Supabase
       const { data, error: authError } = await supabase.auth.signUp({
-        email,
-        password,
-      });
+  email,
+  password,
+  options: {
+    data: {
+      full_name: name,
+      role: "candidate",
+    },
+  },
+});
 
       if (authError) {
         setError("Erro ao criar usuário: " + authError.message);
@@ -49,7 +55,6 @@ const CreateCandidate = () => {
         email: user.email || "",  // Garantir que o email não seja undefined
         full_name: name,
         phone,
-        experience,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
@@ -115,16 +120,7 @@ const CreateCandidate = () => {
           />
         </div>
 
-        <div>
-          <label htmlFor="experience" className="block text-lg">Experiência</label>
-          <textarea
-            id="experience"
-            value={experience}
-            onChange={(e) => setExperience(e.target.value)}
-            className="w-full px-4 py-2 border rounded-md"
-            placeholder="Descreva sua experiência profissional"
-          />
-        </div>
+
 
         <div>
           <label htmlFor="password" className="block text-lg">Senha</label>
